@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace RefugioAnimales.src
 {
-    public class PerroFactory : AnimalFactory
+    internal class PerroFactory : AnimalFactory
     {
-        public override Animal CrearAnimal(string nombre, int edad)
+        public override Animal CrearAnimal(string nombre, int edad, bool adoptado)
         {
             return new Perro
             {
                 Nombre = nombre,
-                Edad = edad
+                Edad = edad,
+                Adoptado = adoptado
             };
         }
     }
