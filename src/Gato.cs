@@ -1,13 +1,15 @@
-using System;
-
 namespace RefugioAnimales.src
 {
-    internal class Gato : Animal
+    internal class GatoFactory : AnimalFactory
     {
-        public override void MostrarInformacion()
+        public override Animal CrearAnimal(string nombre, int edad, bool adoptado)
         {
-            Console.WriteLine("Tipo: Gato");
-            base.MostrarInformacion();
+            return new Gato
+            {
+                Nombre = nombre,
+                Edad = edad,
+                Adoptado = adoptado
+            };
         }
     }
 }
