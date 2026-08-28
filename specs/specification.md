@@ -1,69 +1,74 @@
-# SDD - Sistema de Registro de Animales
+# SDD - Sistema de Registro de Animales para un Refugio
 
 ## 1. Problema
 
-Un refugio de animales recibe diferentes animales que deben ser registrados para llevar un control básico de los que se encuentran bajo su cuidado.
+Un refugio de animales recibe perros, gatos y conejos que deben ser registrados para llevar un control básico de los animales que se encuentran bajo su cuidado.
 
-El sistema será utilizado por el encargado del refugio para registrar los animales que ingresan. Cada animal puede ser de un tipo diferente, como perro, gato o conejo, y debe conservar información básica como su nombre, edad y estado de adopción.
+El sistema será utilizado por el encargado del refugio para registrar los animales que ingresan. Para cada animal se necesita almacenar información básica como su nombre, edad, tipo de animal y estado de adopción.
 
-El problema se encuentra en la creación de los objetos que representan a cada animal. El programa necesita crear una clase diferente dependiendo del tipo de animal seleccionado. Si el programa principal se encargara directamente de crear cada objeto, tendría que conocer y manejar la creación de todas las clases concretas.
+El problema principal está relacionado con la creación de los objetos que representan a los diferentes animales. Dependiendo del tipo seleccionado, el sistema debe crear un objeto diferente: un perro, un gato o un conejo.
 
-Se busca separar la responsabilidad de crear los animales del resto de la lógica del programa.
+Si el programa principal se encargara directamente de crear cada objeto, tendría que conocer las clases concretas y contener la lógica necesaria para decidir cuál objeto construir.
+
+Por esta razón, se propone separar la responsabilidad de creación de los animales del resto del programa mediante un patrón creacional.
+
+---
 
 ## 2. Requisitos
 
-### Requisitos funcionales
+### 2.1 Requisitos funcionales
 
-- **RF-01:** El sistema debe permitir registrar un animal.
-- **RF-02:** El sistema debe permitir seleccionar el tipo de animal: perro, gato o conejo.
-- **RF-03:** El sistema debe permitir ingresar el nombre del animal.
-- **RF-04:** El sistema debe permitir ingresar la edad del animal.
-- **RF-05:** El sistema debe permitir indicar si el animal está adoptado o disponible para adopción.
-- **RF-06:** El sistema debe crear un objeto correspondiente al tipo de animal seleccionado.
-- **RF-07:** El sistema debe mostrar la información del animal registrado.
-- **RF-08:** El sistema debe permitir comprobar que cada fábrica crea el tipo de animal que le corresponde.
+- **RF-01:** El sistema debe permitir registrar un animal en el refugio.
 
-### Requisitos no funcionales
+- **RF-02:** El sistema debe permitir seleccionar el tipo de animal que se desea registrar.
 
-- **RNF-01:** La solución debe ser sencilla y estar enfocada en demostrar el patrón Factory Method.
-- **RNF-02:** La responsabilidad de crear los objetos debe estar separada del programa principal.
+- **RF-03:** El sistema debe permitir registrar perros, gatos y conejos.
+
+- **RF-04:** El sistema debe permitir ingresar el nombre del animal.
+
+- **RF-05:** El sistema debe permitir ingresar la edad del animal.
+
+- **RF-06:** El sistema debe permitir indicar el estado de adopción del animal.
+
+- **RF-07:** El estado de adopción debe permitir identificar si el animal está disponible para adopción o si ya fue adoptado.
+
+- **RF-08:** El sistema debe crear un objeto correspondiente al tipo de animal seleccionado.
+
+- **RF-09:** El sistema debe mostrar la información del animal registrado.
+
+- **RF-10:** La creación del objeto debe realizarse mediante el método definido por las fábricas del sistema.
+
+### 2.2 Requisitos no funcionales
+
+- **RNF-01:** La solución debe ser sencilla y estar enfocada en demostrar el funcionamiento del patrón Factory Method.
+
+- **RNF-02:** La responsabilidad de crear los diferentes tipos de animales debe estar separada de la lógica principal del programa.
+
 - **RNF-03:** El código debe estar organizado en clases con responsabilidades claras.
-- **RNF-04:** La solución debe poder ejecutarse como una aplicación de consola en C#.
+
+- **RNF-04:** La aplicación debe poder ejecutarse como un programa de consola desarrollado en C#.
+
+- **RNF-05:** La solución debe ser comprensible para facilitar su explicación y mantenimiento.
+
+---
 
 ## 3. Patrón seleccionado
 
 ### Factory Method
 
-El patrón seleccionado es **Factory Method**, uno de los patrones creacionales.
+El patrón creacional seleccionado para este proyecto es **Factory Method**.
 
-Se seleccionó porque el sistema necesita crear diferentes tipos de animales dependiendo de la opción seleccionada por el usuario.
+Se eligió este patrón porque el sistema necesita crear diferentes tipos de animales dependiendo de la opción seleccionada por el usuario.
 
-Sin utilizar este patrón, el programa principal podría crear directamente los objetos mediante instrucciones como `new Perro()`, `new Gato()` o `new Conejo()`. Esto haría que el programa principal conociera las clases concretas y tuviera responsabilidad sobre su creación.
+Los animales comparten características generales, pero pertenecen a diferentes clases concretas:
 
-Con Factory Method, la creación se delega a fábricas concretas. `PerroFactory` crea perros, `GatoFactory` crea gatos y `ConejoFactory` crea conejos.
+- `Perro`
+- `Gato`
+- `Conejo`
 
-De esta manera, el código que utiliza los animales queda separado de la lógica específica utilizada para crearlos.
+Una solución directa podría consistir en crear estos objetos directamente desde el programa principal utilizando instrucciones como:
 
-### Ventaja frente a crear los objetos directamente
-
-La principal ventaja es la separación de responsabilidades. El programa principal no necesita conocer los detalles de creación de cada tipo de animal.
-
-Además, si el refugio necesitara agregar otro tipo de animal en el futuro, se podría crear una nueva clase de animal y una fábrica correspondiente sin tener que modificar toda la lógica de creación existente.
-
-## 4. Diseño propuesto
-
-La solución utilizará una clase base llamada `Animal`, que contendrá la información común de los animales:
-
-- Nombre
-- Edad
-- Estado de adopción
-
-Las clases `Perro`, `Gato` y `Conejo` heredarán de `Animal`.
-
-La estructura será:
-
-```text
-                 Animal
-              /     |     \
-             /      |      \
-         Perro     Gato    Conejo
+```csharp
+new Perro()
+new Gato()
+new Conejo()
