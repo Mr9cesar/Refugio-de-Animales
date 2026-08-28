@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace RefugioAnimales.src
 {
-    public abstract class AnimalFactory
+    internal abstract class AnimalFactory
     {
-        public abstract Animal CrearAnimal(string Nombre, int Edad);
+        public abstract Animal CrearAnimal(string nombre, int edad, bool adoptado);
     }
 }
