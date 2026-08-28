@@ -1,63 +1,100 @@
-# Refugio de Animales
+````markdown
+# SDD - Sistema de Registro de Animales para un Refugio
 
-## Descripción
+## 1. Problema
 
-Este proyecto consiste en una solución sencilla para registrar animales que ingresan a un refugio.
+Un refugio de animales recibe diferentes animales que deben ser registrados para llevar un control básico de los que se encuentran bajo su cuidado.
 
-El sistema permite registrar tres tipos de animales:
+El sistema será utilizado por el encargado del refugio para registrar los animales que ingresan. Para cada animal se necesita almacenar información básica como su nombre, edad, tipo de animal y estado de adopción.
 
-* Perros
-* Gatos
-* Conejos
+El problema principal está en la creación de los objetos que representan a los diferentes animales. Dependiendo del tipo seleccionado, el sistema debe crear un objeto diferente: un perro, un gato o un conejo.
 
-Para cada animal se registra la siguiente información:
+Si el programa principal se encargara directamente de crear cada objeto, tendría que conocer las clases concretas y contener la lógica necesaria para decidir cuál objeto construir.
+
+Por esta razón, se propone separar la responsabilidad de crear los animales del resto del programa mediante un patrón creacional.
+
+## 2. Requisitos
+
+### 2.1 Requisitos funcionales
+
+- **RF-01:** El sistema debe permitir registrar un animal en el refugio.
+- **RF-02:** El sistema debe permitir seleccionar el tipo de animal que se desea registrar.
+- **RF-03:** El sistema debe permitir registrar perros, gatos y conejos.
+- **RF-04:** El sistema debe permitir ingresar el nombre del animal.
+- **RF-05:** El sistema debe permitir ingresar la edad del animal.
+- **RF-06:** El sistema debe permitir indicar el estado de adopción del animal.
+- **RF-07:** El estado de adopción debe permitir identificar si el animal está disponible para adopción o si ya fue adoptado.
+- **RF-08:** El sistema debe crear un objeto correspondiente al tipo de animal seleccionado.
+- **RF-09:** El sistema debe mostrar la información del animal registrado.
+- **RF-10:** La creación del objeto debe realizarse mediante el método definido por las fábricas del sistema.
+
+### 2.2 Requisitos no funcionales
+
+- **RNF-01:** La solución debe ser sencilla y estar enfocada en demostrar el funcionamiento del patrón Factory Method.
+- **RNF-02:** La responsabilidad de crear los diferentes tipos de animales debe estar separada de la lógica principal del programa.
+- **RNF-03:** El código debe estar organizado en clases con responsabilidades claras.
+- **RNF-04:** La aplicación debe poder ejecutarse como un programa de consola desarrollado en C#.
+- **RNF-05:** La solución debe ser comprensible para facilitar su explicación y mantenimiento.
+
+## 3. Patrón seleccionado
+
+### Factory Method
+
+El patrón creacional seleccionado para este proyecto es **Factory Method**.
+
+Se eligió este patrón porque el sistema necesita crear diferentes tipos de animales dependiendo de la opción seleccionada por el usuario.
+
+Los animales comparten características generales, pero pertenecen a diferentes clases concretas:
+
+- `Perro`
+- `Gato`
+- `Conejo`
+
+Una solución directa podría consistir en crear estos objetos directamente desde el programa principal utilizando instrucciones como:
+
+```csharp
+new Perro()
+new Gato()
+new Conejo()
+````
+
+Sin embargo, de esta manera el programa principal tendría que conocer directamente las clases concretas y decidir cómo crear cada objeto.
+
+Con Factory Method, esta responsabilidad se delega a clases especializadas llamadas fábricas.
+
+Cada fábrica se encarga de crear un tipo específico de animal:
+
+* `PerroFactory` crea objetos `Perro`.
+* `GatoFactory` crea objetos `Gato`.
+* `ConejoFactory` crea objetos `Conejo`.
+
+La clase `AnimalFactory` define el método `CrearAnimal()`, mientras que las fábricas concretas implementan este método según el objeto que deben crear.
+
+### Ventaja frente a crear los objetos directamente
+
+La principal ventaja es la separación de responsabilidades.
+
+El programa principal no necesita encargarse directamente de construir cada tipo de animal. La responsabilidad de creación se encuentra en las fábricas correspondientes.
+
+Esto también facilita la ampliación del sistema. Si en el futuro el refugio necesitara registrar otro tipo de animal, se podría crear una nueva clase que herede de `Animal` y una fábrica encargada de crearla.
+
+De esta manera, la lógica existente se mantiene más organizada.
+
+## 4. Diseño propuesto
+
+La solución estará compuesta por una clase base llamada `Animal` y tres clases concretas:
+
+* `Perro`
+* `Gato`
+* `Conejo`
+
+La clase `Animal` contendrá los datos comunes de todos los animales:
 
 * Nombre
 * Edad
-* Tipo de animal
 * Estado de adopción
 
-El usuario selecciona el tipo de animal, ingresa sus datos y el sistema crea el objeto correspondiente.
-
-El proyecto fue desarrollado para demostrar el uso de un patrón de diseño creacional.
-
-## Problema
-
-En un refugio pueden ingresar diferentes tipos de animales y cada uno debe estar representado por un objeto diferente dentro del programa.
-
-El problema se presenta cuando el sistema necesita decidir qué objeto crear dependiendo del tipo de animal seleccionado.
-
-Una forma directa de solucionar esto sería crear los objetos desde el programa principal utilizando `new Perro()`, `new Gato()` o `new Conejo()`. Sin embargo, esto haría que el programa principal tuviera que conocer directamente las clases concretas y encargarse de su creación.
-
-Para solucionar este problema se utiliza el patrón **Factory Method**, que permite separar la creación de los objetos de la lógica principal del programa.
-
-## Patrón utilizado: Factory Method
-
-**Factory Method** es un patrón creacional que permite delegar la creación de objetos a clases especializadas.
-
-En este proyecto se utiliza una clase abstracta llamada `AnimalFactory`, que define el método `CrearAnimal()`.
-
-Las fábricas concretas son:
-
-* `PerroFactory`, que crea objetos `Perro`.
-* `GatoFactory`, que crea objetos `Gato`.
-* `ConejoFactory`, que crea objetos `Conejo`.
-
-La estructura es:
-
-```text
-AnimalFactory
-     │
-     ├── PerroFactory → Perro
-     ├── GatoFactory → Gato
-     └── ConejoFactory → Conejo
-```
-
-La ventaja de utilizar este patrón es que el programa principal no tiene que encargarse directamente de crear cada tipo de animal. La responsabilidad de creación queda separada y organizada en las fábricas correspondientes.
-
-## Diseño
-
-El proyecto está compuesto por una clase base `Animal` y tres clases que heredan de ella:
+La relación entre estas clases será:
 
 ```text
                  Animal
@@ -66,112 +103,97 @@ El proyecto está compuesto por una clase base `Animal` y tres clases que hereda
            Perro  Gato  Conejo
 ```
 
-La clase `Animal` contiene la información común de los animales:
+Para implementar Factory Method se utilizará una clase abstracta llamada `AnimalFactory`.
+
+Esta clase definirá el método:
+
+```text
+CrearAnimal()
+```
+
+Las fábricas concretas serán:
+
+```text
+              AnimalFactory
+             /      |       \
+            /       |        \
+   PerroFactory  GatoFactory  ConejoFactory
+         |            |             |
+         ↓            ↓             ↓
+       Perro         Gato         Conejo
+```
+
+Cada fábrica implementará `CrearAnimal()` y devolverá el tipo de animal que le corresponde.
+
+### Clases principales
+
+#### Animal
+
+Clase base que representa las características comunes de los animales.
+
+Contendrá:
 
 * `Nombre`
 * `Edad`
 * `Adoptado`
 
-Las clases `Perro`, `Gato` y `Conejo` representan los diferentes tipos de animales.
+También tendrá un método para mostrar la información del animal.
 
-Para la creación de los objetos se utilizan las fábricas:
+#### Perro
 
-```text
-                AnimalFactory
-               /      |       \
-              /       |        \
-     PerroFactory  GatoFactory  ConejoFactory
-          |            |             |
-          ↓            ↓             ↓
-        Perro         Gato         Conejo
+Clase que representa un perro y hereda de `Animal`.
+
+#### Gato
+
+Clase que representa un gato y hereda de `Animal`.
+
+#### Conejo
+
+Clase que representa un conejo y hereda de `Animal`.
+
+#### AnimalFactory
+
+Clase abstracta que define el método `CrearAnimal()`.
+
+Su función es establecer la estructura que deberán seguir las fábricas concretas.
+
+#### PerroFactory
+
+Implementa `CrearAnimal()` y crea objetos de tipo `Perro`.
+
+#### GatoFactory
+
+Implementa `CrearAnimal()` y crea objetos de tipo `Gato`.
+
+#### ConejoFactory
+
+Implementa `CrearAnimal()` y crea objetos de tipo `Conejo`.
+
+#### Program
+
+Contiene el flujo principal de la aplicación.
+
+Permite al usuario:
+
+1. Seleccionar el tipo de animal.
+2. Ingresar el nombre.
+3. Ingresar la edad.
+4. Indicar el estado de adopción.
+5. Crear el animal mediante la fábrica correspondiente.
+6. Mostrar la información del animal.
+
+## 5. Criterios de aceptación
+
+* **CA-01:** Al seleccionar la opción correspondiente a perro, el sistema debe crear correctamente un objeto `Perro`.
+* **CA-02:** Al seleccionar la opción correspondiente a gato, el sistema debe crear correctamente un objeto `Gato`.
+* **CA-03:** Al seleccionar la opción correspondiente a conejo, el sistema debe crear correctamente un objeto `Conejo`.
+* **CA-04:** El objeto creado debe conservar correctamente el nombre ingresado por el usuario.
+* **CA-05:** El objeto creado debe conservar correctamente la edad ingresada por el usuario.
+* **CA-06:** El objeto creado debe conservar correctamente el estado de adopción seleccionado.
+* **CA-07:** El sistema debe mostrar el tipo, nombre, edad y estado de adopción del animal registrado.
+* **CA-08:** La creación de cada animal debe realizarse mediante el método `CrearAnimal()` de la fábrica correspondiente.
+* **CA-09:** Las fábricas deben crear únicamente el tipo de animal que les corresponde.
+* **CA-10:** El programa debe funcionar correctamente para perros, gatos y conejos.
+
 ```
-
-El programa principal permite seleccionar el tipo de animal, ingresar sus datos y utilizar la fábrica correspondiente para crear el objeto.
-
-## Funcionamiento
-
-El programa solicita al usuario el tipo de animal:
-
-```text
-=== REFUGIO DE ANIMALES ===
-
-Seleccione el tipo de animal:
-
-1. Perro
-2. Gato
-3. Conejo
 ```
-
-Después solicita los datos del animal:
-
-```text
-Nombre: Max
-Edad: 3
-
-¿El animal está adoptado?
-
-1. Disponible para adopción
-2. Adoptado
-```
-
-Finalmente, muestra la información del animal registrado:
-
-```text
-=== ANIMAL REGISTRADO ===
-
-Tipo: Perro
-Nombre: Max
-Edad: 3 años
-Estado: Disponible para adopción
-```
-
-## Estructura del proyecto
-
-```text
-RefugioAnimales/
-│
-├── README.md
-│
-├── specs/
-│   └── specification.md
-│
-└── src/
-    ├── Animal.cs
-    ├── AnimalFactory.cs
-    ├── Perro.cs
-    ├── PerroFactory.cs
-    ├── Gato.cs
-    ├── GatoFactory.cs
-    ├── Conejo.cs
-    ├── ConejoFactory.cs
-    └── Program.cs
-```
-
-## Requisitos
-
-Para ejecutar el proyecto se necesita:
-
-* Visual Studio Community
-* .NET
-* C#
-
-## Ejecución
-
-1. Abrir el proyecto `RefugioAnimales` en Visual Studio Community.
-2. Compilar la solución.
-3. Ejecutar el programa.
-4. Seleccionar el tipo de animal.
-5. Ingresar el nombre.
-6. Ingresar la edad.
-7. Seleccionar el estado de adopción.
-8. El sistema mostrará la información del animal creado.
-
-También se puede ejecutar utilizando:
-
-```text
-Ctrl + F5
-```
-
-## Objetivo académico
-
-Este proyecto fue desarrollado como una actividad académica para comprender y demostrar el funcionamiento del patrón creacional **Factory Method**, aplicándolo a un problema sencillo de registro de animales en un refugio.
