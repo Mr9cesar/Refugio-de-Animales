@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace RefugioAnimales.src
 {
-    public class Conejo : Animal
+    internal class Conejo : Animal
     {
         public override void MostrarInformacion()
         {
-            Console.WriteLine($"Conejo: {Nombre}");
-            Console.WriteLine($"Edad: {Edad} años");
+            Console.WriteLine("Tipo: Conejo");
+            base.MostrarInformacion();
         }
     }
 }
